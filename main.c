@@ -1,7 +1,11 @@
 /*******************************************************************************
- A few simple cipher tools. Present functionality:
-  - Encrypt/Decrypt with Rotation(Caesar) and Substitution Ciphers
-  - Crack the Rotation Cipher using brute force with dictionary lookup
+  A few simple cipher tools. Present functionality:
+    - Encrypt/Decrypt with Rotation(Caesar) and Substitution Ciphers
+    - Crack the Rotation Cipher using brute force with dictionary lookup
+
+  TODO: - use a portable string-compare(ignore case) in the dictionaryLookup
+        function. At the moment I think strcasecmp may work only on UNIX like
+        platforms
 
   Michael Ruppe
   April 2019
@@ -45,15 +49,6 @@ void swapChar(char *xp, char *yp) {
     char temp = *xp;
     *xp = *yp;
     *yp = temp;
-}
-
-int strcicmp(char const *a, char const *b) {
-  // String compare that ignores case
-    for (;; a++, b++) {
-        int d = tolower((unsigned char)*a) - tolower((unsigned char)*b);
-        if (d != 0 || !*a)
-            return d;
-    }
 }
 
 void substitution(void) {
