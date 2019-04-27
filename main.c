@@ -18,7 +18,7 @@
 #include<string.h>
 
 // File Paths
-#define DICTIONARY "dictionary.txt"
+#define DICTIONARY "google-10000-english.txt"
 
 // Define state handles
 #define STATE_ROTATION 1
