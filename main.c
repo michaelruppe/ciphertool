@@ -15,6 +15,7 @@
 
 
 #include<stdio.h>
+#include<stdlib.h>
 #include<string.h>
 
 // File Paths
@@ -110,70 +111,78 @@ void substitution(void) {
   }
 }
 
-void caesar(void){
-  const int encrypt = 0;
-  const int decrypt = 1;
-  int mode;
+// Encrypts or decrypts a string using the supplied key
+int rotationCipher(char *str, int key, char *strOut, _Bool encrypt) {
+  // Check input parameters
+  if (key < 0 || key > 25) {
+    printf("Key for rotation cipher must be an integer between 0 and 25\n**** RESTARTING ****");
+    return 1;
+  }
 
-  char text[1024], character;
-  char encryptionKey[26];
+  char character;
+  // Perform the rotation cipher / decipher
+  for(int i = 0; str[i] != '\0'; i++){
+    character = str[i];
 
-  // Select encrypt/decrypt
-  printf("Enter:\n0:Encrypt\n1:Decrypt\n ");
-  scanf(" %d" ,&mode);
-
-  if (mode == encrypt) {
-    char text[1024], character;
-    int encryptionKey;
-
-    printf("Enter plaintext message: ");
-    scanf(" %[^\n]s" ,text);
-    printf("Enter encryption key: ");
-    scanf(" %d", &encryptionKey);
-
-
-    for(int i = 0; text[i] != '\0'; i++){
-      character = text[i];
-
-      if(character >= 'A' && character <= 'Z'){
-        character = character + encryptionKey;
+    // ENCRYPT
+    if(encrypt){
+      if(character >= 'A' && character <= 'Z'){ // Encrypt capitals, wrapping Z-A
+        character = character + key;
 
         if(character > 'Z'){
           character = character - 'Z' + 'A' - 1;
         }
+      } else if(character >= 'a' && character <= 'z'){ // Encrypt lower-case, wrapping z-a
+        character = character + key;
 
-        text[i] = character;
-      }
-    }
-
-    printf("Encrypted message: %s \n", text);
-
-  }
-  else if(mode == decrypt) {
-    char text[1024], character;
-    int i, encryptionKey;
-
-    printf("Enter encrypted message: ");
-    scanf(" %[^\n]s" ,text);
-    printf("Enter encryption key: ");
-    scanf(" %d", &encryptionKey);
-
-    for(i = 0; text[i] != '\0'; i++){
-      character = text[i];
-
-      if(character >= 'A' && character <= 'Z'){
-        character = character - encryptionKey;
-
-        if(character < 'A'){
-          character = character + 'Z' - 'A' + 1;
+        if(character > 'z'){
+          character = character - 'z' + 'a' - 1;
         }
+      }
+    // DECRYPT
+    } else {
+      if(character >= 'A' && character <= 'Z'){ // Decrypt capitals, wrapping Z-A
+        character = character - key;
 
-        text[i] = character;
+        if(character > 'Z'){
+          character = character + 'Z' - 'A' - 1;
+        }
+      } else if(character >= 'a' && character <= 'z'){ // Decrypt lower-case, wrapping z-a
+        character = character - key;
+
+        if(character > 'z'){
+          character = character + 'z' - 'a' - 1;
+        }
       }
     }
-
-    printf("Decrypted message: %s \n", text);
+    strOut[i] = character;
   }
+  return 0;
+
+}
+
+
+void caesar(void){
+  int mode;
+  int encryptionKey = 0; // Amount to rotate the cipher
+  char text[1024], *textOut;
+
+  // Select encrypt/decrypt
+  printf("  Enter:\n   0: Decrypt\n   1: Encrypt\n ");
+  scanf(" %d" ,&mode);
+
+  printf("Enter message to process: ");
+  scanf(" %[^\n]s" ,text);
+  printf("Enter encryption key: ");
+  scanf(" %d", &encryptionKey);
+
+  textOut = calloc(strlen(text), sizeof(char)); // Initialise a block of memory to zero. Same size as input string.
+
+  rotationCipher(text, encryptionKey, textOut, mode);
+
+  printf("Processed message: %s \n", textOut);
+
+  free(textOut);
 }
 
 void crackSubstitution(void){
@@ -294,18 +303,7 @@ void crackRotation(void) {
   // Loop through all possible keys and count number of dictionary words found for each key
   for(int encryptionKey = 0; encryptionKey < 26; encryptionKey++) {
     // Step 1: Perform decryption with current key (offset)
-    for(int i = 0; text[i] != '\0'; i++){
-      character = text[i];
-
-      if(character >= 'A' && character <= 'Z'){
-        character = character - encryptionKey;
-
-        if(character < 'A' && character != ' '){
-          character = character + 'Z' - 'A' + 1;
-        }
-      }
-      decipherText[i] = character;
-    }
+    rotationCipher(text, encryptionKey, decipherText, 0); // Arg = 0 for decrypt
 
     // Step 2: Tokenise the deciphertext and count how many dictionary words appear. Increment that key's score for each match
     char * pch;
@@ -321,7 +319,7 @@ void crackRotation(void) {
 
   }
 
-  // Step 3: Find the highest scoring key
+  // Step 3: Now have an array of scores to match the array of keys. Find the highest scoring key
   int maxScore = 0;
   int encryptionKey = 0;
   for(int i=0; i < 26; i++) {
@@ -361,7 +359,7 @@ int main() {
 
   while(1) {
     // Prompt for cipher function
-    printf("\n\n\n Cipher Tools\n============================\n    Rotation Cipher: 1\nSubstitution Cipher: 2\n     Crack Rotation: 3\n Crack Substitution: 4\n               Quit: 0\n Select tool: ");
+    printf("\n============================\n\tCipher Tools\n============================\n    Rotation Cipher: 1\nSubstitution Cipher: 2\n     Crack Rotation: 3\n Crack Substitution: 4\n               Quit: 0\n Select tool: ");
     int state; // Determines which program to run.
     scanf(" %d" ,&state);
 
