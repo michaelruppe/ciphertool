@@ -120,7 +120,7 @@ void substitution(void) {
 int rotationCipher(char *str, int key, char *strOut, _Bool encrypt) {
   // Check input parameters
   if (key < 0 || key > 25) {
-    printf("Key for rotation cipher must be an integer between 0 and 25\n**** RESTARTING ****");
+    printf("Warning: Key for rotation cipher should be an integer between 0 and 25\n");
     return 1;
   }
 
@@ -164,16 +164,18 @@ int rotationCipher(char *str, int key, char *strOut, _Bool encrypt) {
     printf(" Select Mode:\n   0: Decrypt\n   1: Encrypt\n ");
     scanf(" %d" ,&mode);
 
-    printf("Enter message to process: ");
+    printf("Enter message to process [up to 4096 chars]: ");
     scanf(" %[^\n]s" ,text);
-    printf("Enter encryption key: ");
+    printf("Enter encryption key [0-25]: ");
     scanf(" %d", &encryptionKey);
 
     textOut = calloc(strlen(text), sizeof(char)); // Initialise a block of memory to zero. Same size as input string.
 
-    rotationCipher(text, encryptionKey, textOut, mode); // Mode: 1=Encrypt, 0=Decrypt
-
-    printf("Processed message: %s \n", textOut);
+    if( !rotationCipher(text, encryptionKey, textOut, mode) ){ // Mode: 1=Encrypt, 0=Decrypt
+      printf("Processed message: %s \n", textOut);
+    } else {
+      printf("Error: restarting\n");
+    }
 
     free(textOut);
   }
