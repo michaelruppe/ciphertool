@@ -60,64 +60,57 @@ void swapChar(char *xp, char *yp) {
   *yp = temp;
 }
 
+int substitutionCipher(char *str, char *key, char *strOut, _Bool encrypt) {
+  char character;
+  // Loop through input message
+  for(int i=0; i<strlen(str); i++){
+    character = str[i];
+    // Only process UPPER-case alphabetical characters.
+    if (character >= 'A' && character <= 'Z'){
+
+      // Find the assigned key/letter for encrypt/decrypt
+      for(int j=0; j<26; j++){ // For each letter in the alphabet
+        if( encrypt && str[i] == alphabet[j] ){ // Encryption
+          //Replace letter with matching encryption key character
+          strOut[i] = key[j];
+          break;
+        } else if( !encrypt && str[i] == key[j]) { // Decryption
+          //Replace letter with matching alphabet character
+          strOut[i] = alphabet[j];
+          break;
+        }
+      }
+    } else {
+      // Pass non-alphabet characters unchanged
+      strOut[i] = str[i];
+    }
+  }
+}
+
 // Substitution Cipher: Encrypts or decrypts a string using the supplied key
 void substitution(void) {
-  const int encrypt = 0;
-  const int decrypt = 1;
-  int mode;
 
-  char text[1024], character;
+  int mode;
+  char text[4096], *textOut, character;
   char encryptionKey[26];
 
 
   // Select encrypt/decrypt
-  printf("\nEnter:\n0:Encrypt\n1:Decrypt\n ");
+  printf(" Select Mode:\n   0: Decrypt\n   1: Encrypt\n ");
   scanf(" %d" ,&mode);
 
-  if (mode == encrypt) {
-    // Encryption Code
+  printf("Enter message to process (up to 4096 chars): ");
+  scanf(" %[^\n]s" ,text);
+  printf("Enter the encryption key. This should be all alphabetical characters, in the order they are to be substituted for A,B,C.. etc:\n  ");
+  scanf(" %s", encryptionKey);
 
-    printf("Enter plaintext message: ");
-    scanf(" %[^\n]s" ,text);
-    printf("Enter 26 character encryption key: ");
-    scanf(" %s", encryptionKey);
+  textOut = calloc(strlen(text), sizeof(char)); // Initialise a block of memory to zero. Same size as input string.
 
-    // Loop through plaintext message
-    for(int i=0; i<strlen(text); i++){
-      // Finding what letter
-      for(int j=0; j<26; j++){
-        if(text[i] == alphabet[j] ){
-          //Replace letter with matching encryption key character
-          text[i] = encryptionKey[j];
-          break;
-        }
-      }
-    }
-    printf("Encrypted text: \n%s\n", text);
+  substitutionCipher(text, encryptionKey, textOut, mode);
+  printf("Processed message: %s \n", textOut);
+  free(textOut);
 
-  } else if (mode == decrypt){
-    // Decryption Code
-    printf("Enter encrypted message: ");
-    scanf(" %[^\n]s" ,text);
-    printf("Enter 26 character encryption key: ");
-    scanf(" %s", encryptionKey);
 
-    // Loop through encrypted message
-    for(int i=0; i<strlen(text); i++){
-      // Finding what letter
-      for(int j=0; j<26; j++){
-        if(text[i] == encryptionKey[j] ){
-          //Replace letter with matching alphabet character
-          text[i] = alphabet[j];
-          break;
-        }
-      }
-    }
-    printf("Decrypted text: \n%s\n", text);
-
-  } else {
-    printf("Invalid selection\n");
-  }
 }
 
 // Rotation Cipher: Encrypts or decrypts a string using the supplied key
@@ -167,7 +160,7 @@ void rotation(void){
   printf(" Select Mode:\n   0: Decrypt\n   1: Encrypt\n ");
   scanf(" %d" ,&mode);
 
-  printf("Enter message to process [up to 4096 chars]: ");
+  printf("Enter message to process (up to 4096 chars): ");
   scanf(" %[^\n]s" ,text);
   printf("Enter encryption key [0-25]: ");
   scanf(" %d", &encryptionKey);
