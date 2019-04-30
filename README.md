@@ -6,10 +6,10 @@ Features:
  - Crack the Rotation Cipher (find the right key)
 
 ### To run the program
-Compile: `gcc main.c`
+Compile: `gcc main.c ciphertool.c`
 Run: `./a.out`
 
-Compile and run in one command: `gcc main.c && ./a.out`
+Compile and run in one command: `gcc main.c ciphertool.c && ./a.out`
 
 
 ### Files
