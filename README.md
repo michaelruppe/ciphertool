@@ -13,7 +13,9 @@ Compile and run in one command: `gcc main.c ciphertool.c && ./a.out`
 
 
 ### Files
- - **main.c**: The program.
+ - **main.c**: User-interactive CLI program to access the ciphertool functions.
+ - **ciphertool.c**: Functions to cipher/decipher
+ - **ciphertool.h**: The C header file for the cipher functions.
  - **google-10000-english.txt**: The 10,000 most common English words in order of frequency, as determined by n-gram frequency analysis of the Google's Trillion Word Corpus.
 
 
