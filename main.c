@@ -209,7 +209,7 @@ void crackRotation(void) {
   text = calloc(4096, sizeof(char));
   decipherText = calloc(4096, sizeof(char));
   // Prompt for cihpertext to decrypt. Store in array.
-  printf("Enter cipher to crack: ");
+  printf("*** Enter cipher to crack: \n");
   scanf(" %[^\n]s" , text);
 
   // Loop through all possible keys and count number of dictionary words found for each key
@@ -241,7 +241,7 @@ void crackRotation(void) {
     }
   }
 
-  printf("found key: %d\n", encryptionKey);
+  printf("\n*** Found key: %d\n", encryptionKey);
 
   // Step 4: Final decipher with the best key
   for(int i = 0; text[i] != '\0'; i++){
@@ -260,7 +260,7 @@ void crackRotation(void) {
   // rotationCipher(text, encryptionKey, decipherText, 0); // Arg = 0 for decrypt
 
   // Step 5: Print deciphered text
-  printf("Deciphered Text:\n%s\n",decipherText);
+  printf("*** Deciphered Text:\n%s\n",decipherText);
 
   free(text);
   free(decipherText);
