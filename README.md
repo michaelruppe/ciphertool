@@ -6,14 +6,16 @@ Features:
  - Crack the Rotation Cipher (find the right key)
 
 ### To run the program
-Compile: `gcc main.c ciphertool.c`
-Run: `./a.out`
+**Compile**: `gcc -o ciphertool main.c ciphertool.c`
 
-Compile and run in one command: `gcc main.c ciphertool.c && ./a.out`
+**Run**: `./ciphertool`
+
+**Or**, to compile and run in one command:
+`gcc -o ciphertool main.c ciphertool.c && ./ciphertool`
 
 
 ### Files
- - **main.c**: User-interactive CLI program to access the ciphertool functions.
+ - **main.c**: User-interactive CLI program.
  - **ciphertool.c**: Functions to cipher/decipher
  - **ciphertool.h**: The C header file for the cipher functions.
  - **google-10000-english.txt**: The 10,000 most common English words in order of frequency, as determined by n-gram frequency analysis of the Google's Trillion Word Corpus.
